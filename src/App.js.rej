@@ -1,0 +1,33 @@
+diff a/src/App.js b/src/App.js	(rejected hunks)
+@@ -270,6 +271,9 @@ import WorkPackageCertificationRecordList
+ import AddNonRoutineCard from "./components/planning/nonRoutineCard/AddNonRoutineCard";
+ import NonRoutineCardList from "./components/planning/nonRoutineCard/NonRoutineCardList";
+ import ApproveDemandDetailsPrint from "./components/store/approveDemand/ApproveDemandDetailsPrint";
++import PurchaseInvoice from "./components/procurment/purchaseInvoice/PurchaseInvoice"
++import ApprovedInvoice from "./components/procurment/purchaseInvoice/ApprovedInvoice";
++import PendingInvoice from "./components/procurment/purchaseInvoice/PendingInvoice";
+ 
+ const { Header, Content } = Layout;
+ const HTTP_UNAUTHORIZED = 401
+@@ -383,16 +387,16 @@ function App() {
+           <Route path="store/add-scrap-parts" element={<ProtectRoute><ScrapParts/></ProtectRoute>}/>
+           <Route path="store/add-scrap-parts/:id" element={<ProtectRoute><ScrapParts/></ProtectRoute>}/>
+           <Route path="store/store-parts" element={<ProtectRoute><StoreParts/></ProtectRoute>}/>
+-          <Route path="store/store-parts/edit/:id" element={<ProtectRoute><StoreParts/></ProtectRoute>}/>
++          <Route path="store/store-parts/edit/:id" element={<ProtectRoute><StorePartsEdit/></ProtectRoute>}/>
+           <Route path="store/pending-demand" element={<ProtectRoute><PendingDemandList/></ProtectRoute>} exact />
+           <Route path="store/approve-demand" element={<ProtectRoute><ApproveDemandList/></ProtectRoute>} exact />
+           <Route path="store/approve-demand/details/:id" element={<ProtectRoute><ApproveDemandDetails/></ProtectRoute>} exact />
+           <Route path="store/approve-demand/details/print/:id" element={<ProtectRoute><ApproveDemandDetailsPrint/></ProtectRoute>} exact />
+ 
+-        <Route path="store/work-order" element={<ProtectRoute><WorkOrder/></ProtectRoute>} exact />
+-        <Route path="store/pending-work-order" element={<ProtectRoute><PendingworkOrder/></ProtectRoute>} exact />
+-        <Route path="store/approved-work-order" element={<ProtectRoute><ApprovedWorkOrder/></ProtectRoute>} exact />
+-        <Route path="store/work-order/:id" element={<ProtectRoute><WorkOrder/></ProtectRoute>} exact />
++          <Route path="store/work-order" element={<ProtectRoute><WorkOrder/></ProtectRoute>} exact />
++          <Route path="store/pending-work-order" element={<ProtectRoute><PendingworkOrder/></ProtectRoute>} exact />
++          <Route path="store/approved-work-order" element={<ProtectRoute><ApprovedWorkOrder/></ProtectRoute>} exact />
++          <Route path="store/work-order/:id" element={<ProtectRoute><WorkOrder/></ProtectRoute>} exact />
+ 
+           {/* procurment */}
+           <Route path="material-management" element={ <ProtectRoute> <Procurment/> </ProtectRoute> } exact />

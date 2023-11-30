@@ -1,0 +1,26 @@
+{
+  "common": {
+    "// actions": "",
+    "Active": "Active",
+    "Inactive": "Inactive",
+    "Filter": "Filter",
+    "Reset": "Reset",
+    "Add": "Add",
+    "Back": "Back",
+    "Actions": "Actions",
+    "// status": "",
+    "Status Changed Successfully": "Status Changed Successfully!",
+    "// validation": "",
+    "Maximum 255 characters allowed": "Maximum 255 characters allowed",
+    "Only space is not allowed": "Only space is not allowed"
+  },
+  "planning": {
+    "// Aircrafts": "",
+    "Aircrafts": "Aircrafts",
+    "Aircraft List": "Aircraft List",
+    "A/C Type": "A/C Type",
+    "A/C Registration": "A/C Registration",
+    "A/C Serial": "A/C Serial",
+    "Search Aircraft Name": "Search Aircraft Name"
+  }
+}

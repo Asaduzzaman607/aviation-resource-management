@@ -1,0 +1,196 @@
+import React from 'react';
+import CommonLayout from "../../layout/CommonLayout";
+import ARMBreadCrumbs from "../../common/ARMBreadCrumbs";
+import {Breadcrumb, Col, Empty, Form, Input, notification, Pagination, Row, Select, Space} from "antd";
+import {Link, useParams} from "react-router-dom";
+import ARMCard from "../../common/ARMCard";
+import ARMButton from "../../common/buttons/ARMButton";
+import {EyeOutlined, FilterOutlined, RollbackOutlined} from "@ant-design/icons";
+import ResponsiveTable from "../../common/ResposnsiveTable";
+import ARMTable from "../../common/ARMTable";
+import {useState} from "react";
+import {usePaginate} from "../../../lib/hooks/paginations";
+import {useEffect} from "react";
+import WorkflowActionService from "../../../service/WorkflowActionService";
+import {getErrorMessage} from "../../../lib/common/helpers";
+import subModules from "../../auth/sub_module";
+import Loading from "../common/Loading";
+
+const ApprovedWorkOrder = () => {
+    const { Option } = Select;
+    const { id } = useParams()
+    const[workFlowActions,setWorkFlowActions]=useState([])
+
+
+    const {
+        form,
+        collection,
+        page,
+        totalElements,
+        paginate,
+        fetchData,
+        size,
+        loading
+    } = usePaginate('approvedWorkOrder', '/store-work-order/search',{type: 'APPROVED'});
+    useEffect(() => {
+        getAllWorkFlow(true).catch(console.error)
+    }, []);
+    console.log("approvedWO",collection)
+    const getAllWorkFlow = async (status) => {
+        try {
+            let {data} = await WorkflowActionService.getAllWorkflows(status)
+            //let actions = data.model.filter(action => action.actionable)
+            setWorkFlowActions(data.model)
+        } catch (er) {
+            notification["error"]({message: getErrorMessage(er)});
+        }
+    }
+    const onFinish = (values) => {
+        fetchData({
+            ...values,
+            type: 'APPROVED',
+        })
+    }
+    return (
+        <CommonLayout>
+            <ARMBreadCrumbs>
+                <Breadcrumb separator="/">
+                    <Breadcrumb.Item>
+                        {" "}
+                        <Link to="/store">
+                            {" "}
+                            <i className="fas fa-archive"/> &nbsp;Store
+                        </Link>
+                    </Breadcrumb.Item>
+                    <Breadcrumb.Item>
+
+                        &nbsp;Approved Work Order
+
+                    </Breadcrumb.Item>
+                </Breadcrumb>
+            </ARMBreadCrumbs>
+            {
+                !loading?<ARMCard title="Approved Work Order List">
+                    <Form form={form} onFinish={onFinish}>
+
+                    <Row gutter={20}>
+                        <Col xs={24} md={12} lg={8}>
+                            <Form.Item label="Work Order No." name="query">
+                                <Input />
+                            </Form.Item>
+                        </Col>
+
+                            <Col xs={24} md={12} lg={6}>
+                                <Form.Item name="size" label="Page Size" initialValue="10">
+                                    <Select id="antSelect">
+                                        <Option value="10">10</Option>
+                                        <Option value="20">20</Option>
+                                        <Option value="30">30</Option>
+                                        <Option value="40">40</Option>
+                                        <Option value="50">50</Option>
+                                    </Select>
+                                </Form.Item>
+                            </Col>
+
+                            <Col xs={24} md={12} lg={4}>
+                                <Form.Item>
+                                    <Space>
+                                        <ARMButton size="middle" type="primary" htmlType="submit">
+                                            <FilterOutlined/> Filter
+                                        </ARMButton>
+                                        <ARMButton
+                                          size="middle"
+                                          type="primary"
+                                          htmlType="submit"
+                                          onClick={() => {
+                                              form.resetFields();
+                                              fetchData({type: 'APPROVED'});
+                                          }}
+                                        >
+                                            <RollbackOutlined/> Reset
+                                        </ARMButton>
+                                    </Space>
+                                </Form.Item>
+                            </Col>
+                        </Row>
+                    </Form>
+
+                    <ResponsiveTable>
+                        <ARMTable>
+                            <thead>
+                            <tr>
+                                <th rowSpan={2}>Work Order No</th>
+                                <th colSpan={workFlowActions.length}>APPROVALS</th>
+                                <th rowSpan={2}>Status</th>
+                                <th rowSpan={2}>View Details</th>
+                            </tr>
+                            <tr>
+                                {
+                                    workFlowActions?.map((action) => (
+                                      <td key={action.id}>{action.name}</td>
+                                    ))
+                                }
+
+                            </tr>
+
+                            </thead>
+                            <tbody>
+                            {
+                                collection?.map((data, index) => (
+                                  <tr key={data.id}>
+                                      <td>{data.workOrderNo}</td>
+                                      {
+                                          workFlowActions?.map(action => (
+                                            <td key={action.id}>{data.approvalStatuses[action.id]?.updatedByName || ''}</td>
+                                          ))
+                                      }
+                                      <td>{data.workflowName}</td>
+                                      <td>
+                                          <Link to={`/store/approved-work-order/details/${data.id}`}>
+                                              <ARMButton
+                                                type="primary"
+                                                size="small"
+                                                style={{
+                                                    backgroundColor: "#4aa0b5",
+                                                    borderColor: "#4aa0b5",
+                                                }}
+                                              >
+                                                  <EyeOutlined />
+                                              </ARMButton>
+                                          </Link>
+                                      </td>
+                                  </tr>
+                                ))
+                            }
+
+                            </tbody>
+                        </ARMTable>
+                    </ResponsiveTable>
+                    {/*** for pagination ***/}
+                    <Row>
+                        <Col style={{margin: '0 auto'}}>
+                            {collection.length === 0 ? (
+                              <Row justify="end">
+                                  <Empty style={{marginTop: "10px"}}/>
+                              </Row>
+                            ) : <Row justify="center">
+                                <Col style={{marginTop: 10}}>
+                                    <Pagination
+                                      showSizeChanger={false}
+                                      onShowSizeChange={console.log}
+                                      pageSize={size}
+                                      current={page}
+                                      onChange={paginate}
+                                      total={totalElements}
+                                    />
+                                </Col>
+                            </Row>}
+                        </Col>
+                    </Row>
+                </ARMCard>:<Loading/>
+            }
+        </CommonLayout>
+    );
+};
+
+export default ApprovedWorkOrder;
